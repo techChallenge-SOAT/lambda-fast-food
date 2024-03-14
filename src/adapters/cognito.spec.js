@@ -1,4 +1,4 @@
-const CognitoAdapter = require('./cognito');
+const CognitoToUserAdapter = require('./cognito');
 
 const promiseMock = jest.fn()
 
@@ -10,11 +10,11 @@ const cognitoServiceMock = {
 };
 
 
-describe('CognitoAuthProvider', () => {
-  let authService;
+describe('CognitoToUserAdapter', () => {
+  let cognitoToUserAdapter;
 
   beforeEach(() => {
-    authService = new CognitoAdapter({
+    cognitoToUserAdapter = new CognitoToUserAdapter({
       CognitoIdentityServiceProvider: cognitoServiceMock
     });
   });
@@ -23,7 +23,7 @@ describe('CognitoAuthProvider', () => {
     jest.clearAllMocks();
   });
 
-  describe('createUser', () => {
+  describe('create', () => {
     it('should return error if the email is invalid', async () => {
       const username = '12345678910';
       const password = 'Testpassword1*';
@@ -32,7 +32,7 @@ describe('CognitoAuthProvider', () => {
 
       promiseMock.mockRejectedValue(new Error(expectedError));
 
-      const resultPromise = authService.createUser({username, password, email});
+      const resultPromise = cognitoToUserAdapter.create({username, password, email});
 
       await expect(resultPromise).rejects.toThrow('Invalid email');
     });
@@ -45,7 +45,7 @@ describe('CognitoAuthProvider', () => {
 
       promiseMock.mockRejectedValue(new Error(expectedError));
 
-      const resultPromise = authService.createUser({username, password, email});
+      const resultPromise = cognitoToUserAdapter.create({username, password, email});
       
       await expect(resultPromise).rejects.toThrow(expectedError);
 
@@ -59,13 +59,13 @@ describe('CognitoAuthProvider', () => {
 
       promiseMock.mockResolvedValue(expected);
 
-      const result = await authService.createUser({username, password, email});
+      const result = await cognitoToUserAdapter.create({username, password, email});
 
       expect(result).toBe(expected);
     });
   });
 
-  describe('loginUser', () => {
+  describe('login', () => {
     it('should return error when wrong email or password', async () => {
       const username = 'testuser';
       const password = 'testpassword';
@@ -73,7 +73,7 @@ describe('CognitoAuthProvider', () => {
 
       promiseMock.mockRejectedValue(new Error(expectedError));
 
-      const resultPromise = authService.loginUser(username, password);
+      const resultPromise = cognitoToUserAdapter.login(username, password);
 
       await expect(resultPromise).rejects.toThrow(expectedError);
     });
@@ -93,8 +93,8 @@ describe('CognitoAuthProvider', () => {
 
       promiseMock.mockResolvedValue(expected);
 
-      // Call the loginUser method
-      const result = await authService.loginUser(username, password);
+      // Call the login method
+      const result = await cognitoToUserAdapter.login(username, password);
 
       // Assert that the result is as expected
       expect(result).toBe(expected);
