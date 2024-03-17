@@ -1,11 +1,11 @@
-class CognitoAdapter {
+class CognitoToUserAdapter {
   constructor({
     CognitoIdentityServiceProvider
   }) {
     this.cognito = CognitoIdentityServiceProvider;
   }
 
-  createUser({username, email, password}) {
+  create({username, email, password}) {
     const params = {
       UserPoolId: process.env.USER_POOL_ID,
       Username: username,
@@ -26,7 +26,7 @@ class CognitoAdapter {
     return this.cognito.adminCreateUser(params).promise();
   }
 
-  loginUser(username, password) {
+  login({username, password}) {
     const params = {
       AuthFlow: 'USER_PASSWORD_AUTH',
       ClientId: process.env.APP_CLIENT_ID,
@@ -40,4 +40,4 @@ class CognitoAdapter {
   }
 }
 
-module.exports = CognitoAdapter;
+module.exports = CognitoToUserAdapter;
