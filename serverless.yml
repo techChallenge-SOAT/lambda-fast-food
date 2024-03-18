@@ -4,6 +4,13 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs18.x
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: 
+            - 'cognito-idp:AdminCreateUser'
+          Resource: 'arn:aws:cognito-idp:us-east-1:103447461627:userpool/us-east-1_WFclsjHfV'
 
 functions:
   api:
