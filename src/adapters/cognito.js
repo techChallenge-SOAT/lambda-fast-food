@@ -26,16 +26,6 @@ class CognitoToUserAdapter {
     return this.cognito.adminCreateUser(params).promise();
   }
 
-  confirmSignup({username, code}) {
-    const params = {
-      ClientId: process.env.APP_CLIENT_ID,
-      ConfirmationCode: code,
-      Username: username,
-    };
-
-    return this.cognito.confirmSignUp(params).promise();
-  }
-
   login({username, password}) {
     const params = {
       AuthFlow: 'USER_PASSWORD_AUTH',
@@ -68,15 +58,6 @@ class CognitoToUserAdapter {
       AccessToken
     };
     return this.cognito.getUser(params).promise();
-  }
-
-  changePassword({AccessToken, PreviousPassword, ProposedPassword}) {
-    var params = {
-      AccessToken,
-      PreviousPassword,
-      ProposedPassword
-    };
-    return this.cognito.changePassword(params).promise();
   }
 }
 

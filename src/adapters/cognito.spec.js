@@ -6,6 +6,8 @@ const cognitoServiceMock = {
   adminGetUser: jest.fn().mockReturnThis(),
   adminCreateUser: jest.fn().mockReturnThis(),
   initiateAuth: jest.fn().mockReturnThis(),
+  respondToAuthChallenge: jest.fn().mockReturnThis(),
+  getUser: jest.fn().mockReturnThis(),
   promise: promiseMock,
 };
 
@@ -100,6 +102,62 @@ describe('CognitoToUserAdapter', () => {
       expect(result).toBe(expected);
     });
   });
+
+  describe('respondToNewPasswordAuthChallenge', ()    => {
+    it('should return error when the username is invalid', async () => {
+      const username = '12345678910';
+      const newPassword = 'Testpassword1*';
+      const session = 'session';
+      const expectedError = 'Username is required';
+      promiseMock.mockRejectedValue(new Error(expectedError));
+
+      const resultPromise = cognitoToUserAdapter.respondToNewPasswordAuthChallenge({username, newPassword, session});
+
+      expect(resultPromise).rejects.toThrow(expectedError);
+    })
+
+    it('should return error when the password is invalid', async () => {
+      const username = '12345678910';
+      const newPassword = 'testpassword';
+      const session = 'session';
+      const expectedError = 'Password did not conform with password policy: Password must have uppercase characters';
+      promiseMock.mockRejectedValue(new Error(expectedError));
+
+      const resultPromise = cognitoToUserAdapter.respondToNewPasswordAuthChallenge({username, newPassword, session});
+
+      expect(resultPromise).rejects.toThrow(expectedError);
+
+    })
+
+    it('should return sucess when all if fine', async () => {
+      const username = '12345678910';
+      const newPassword = 'Testpassword1*';
+      const session = 'session';
+      const expected = {
+        "ChallengeParameters": {},
+        "AuthenticationResult": {
+            "AccessToken": "accessToken",
+            "ExpiresIn": 3600,
+            "TokenType": "Bearer",
+            "RefreshToken": "refreshToken",
+            "IdToken": "idToken"
+        }
+      }
+    })
+
+  })
+
+  describe('check', () => {
+    it('should return error when the AccessToken is invalid', async () => {
+      const AccessToken = 'invalidAccessToken';
+      const expectedError = 'Invalid Access Token';
+      promiseMock.mockRejectedValue(new Error(expectedError));
+
+      const resultPromise = cognitoToUserAdapter.check({AccessToken});
+
+      expect(resultPromise).rejects.toThrow(expectedError);
+    })
+  })
 })
 
 
