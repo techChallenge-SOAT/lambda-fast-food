@@ -8,6 +8,14 @@ class UserService {
   Create({ username, email, password }) {
     return this.repository.create({ username, email, password });
   }
+
+  Check({ AccessToken }) {
+    return this.repository.check({ AccessToken });
+  }
+
+  RespondToNewPasswordAuthChallenge({ username, newPassword, session }) {
+    return this.repository.respondToNewPasswordAuthChallenge({ username, newPassword, session });
+  }
   
 }
 

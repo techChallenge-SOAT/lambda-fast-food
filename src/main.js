@@ -21,11 +21,15 @@ class Main {
     const services = {
       User: userServiceInstance,
     }
-    const { createUserHandler, loginHandler } = new Container(services);
+    const { createUserHandler, loginHandler, meHandler, respondToNewPasswordAuthChallengeHandler } = new Container(services);
 
     app.post("/login", loginHandler);
 
     app.post("/signup", createUserHandler);
+
+    app.get("/me", meHandler)
+
+    app.post("/respond-to-auth-challenge", respondToNewPasswordAuthChallengeHandler);
 
     return app
   }

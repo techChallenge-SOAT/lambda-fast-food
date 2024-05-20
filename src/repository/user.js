@@ -25,6 +25,24 @@ class UserRepository {
     }
     return this.adapter.login({ username, password });
   }
+  async check({ AccessToken }) {
+    if (!AccessToken) {
+      throw new Error("AccessToken is required");
+    }
+    return this.adapter.check({ AccessToken });
+  }
+  async respondToNewPasswordAuthChallenge({ username, newPassword, session }) {
+    if (!username) {
+      throw new Error("Username is required");
+    }
+    if (!newPassword) {
+      throw new Error("NewPassword is required");
+    }
+    if (!session) {
+      throw new Error("Session is required");
+    }
+    return this.adapter.respondToNewPasswordAuthChallenge({ username, newPassword, session });
+  }
 }
 
 module.exports = UserRepository;
