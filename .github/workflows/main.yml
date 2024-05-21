@@ -23,10 +23,23 @@ jobs:
     - name: Run tests
       run: npm test
 
+  testcoverage:
+      name: TestsCoverage
+      runs-on: ubuntu-latest
+      steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+  
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Run tests
+        run: npm test -- --coverage
+
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
-    needs: test
+    needs: [test, testcoverage]
     steps:
       - uses: actions/checkout@v3
         with:
