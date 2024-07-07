@@ -25,12 +25,14 @@ class UserRepository {
     }
     return this.adapter.login({ username, password });
   }
+
   async check({ AccessToken }) {
     if (!AccessToken) {
       throw new Error("AccessToken is required");
     }
     return this.adapter.check({ AccessToken });
   }
+
   async respondToNewPasswordAuthChallenge({ username, newPassword, session }) {
     if (!username) {
       throw new Error("Username is required");
@@ -42,6 +44,13 @@ class UserRepository {
       throw new Error("Session is required");
     }
     return this.adapter.respondToNewPasswordAuthChallenge({ username, newPassword, session });
+  }
+
+  async disable({ username }) {
+    if (!username) {
+      throw new Error("Username is required");
+    }
+    return this.adapter.disable({ username });
   }
 }
 
