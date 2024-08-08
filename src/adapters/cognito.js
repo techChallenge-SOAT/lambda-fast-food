@@ -59,6 +59,15 @@ class CognitoToUserAdapter {
     };
     return this.cognito.getUser(params).promise();
   }
+
+  disable({username}) {
+    const params = {
+      UserPoolId: process.env.USER_POOL_ID,
+      Username: username,
+    };
+
+    return this.cognito.adminDisableUser(params).promise();
+  }
 }
 
 module.exports = CognitoToUserAdapter;

@@ -21,7 +21,13 @@ class Main {
     const services = {
       User: userServiceInstance,
     }
-    const { createUserHandler, loginHandler, meHandler, respondToNewPasswordAuthChallengeHandler } = new Container(services);
+    const {
+      createUserHandler,
+      loginHandler,
+      meHandler,
+      respondToNewPasswordAuthChallengeHandler,
+      disableUserHandler,
+    } = new Container(services);
 
     app.post("/login", loginHandler);
 
@@ -30,6 +36,8 @@ class Main {
     app.get("/me", meHandler)
 
     app.post("/respond-to-auth-challenge", respondToNewPasswordAuthChallengeHandler);
+
+    app.delete("/disable-user", disableUserHandler);
 
     return app
   }

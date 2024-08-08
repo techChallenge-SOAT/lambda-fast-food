@@ -3,6 +3,7 @@ const UserRepository = require('./user');
 const mockAdapter = {
   create: jest.fn(),
   login: jest.fn(),
+  disable: jest.fn(),
 };
 
 const userRepository = new UserRepository(mockAdapter);
@@ -96,6 +97,34 @@ describe('UserRepository', () => {
       }
       mockAdapter.login.mockRejectedValue(new Error('Unexpected Error'));
       await expect(userRepository.login(user)).rejects.toThrow('Unexpected Error');
+    })
+  });
+
+  describe('disable', () => {
+    it('should disable a user', async () => {
+      const user = {
+        username: 'test',
+      }
+
+      await userRepository.disable(user);
+
+      expect(mockAdapter.disable).toHaveBeenCalledWith(user);
+    });
+
+    it('should throw an error if username is missing', async () => {
+      const user = {
+        email: 'test@test.com',
+      }
+
+      await expect(userRepository.disable(user)).rejects.toThrow('Username is required');
+    });
+
+    it('should throw the error thrown by the create method from adapter', async () => {
+      const user = {
+        username: 'test',
+      }
+      mockAdapter.disable.mockRejectedValue(new Error('Unexpected Error'));
+      await expect(userRepository.disable(user)).rejects.toThrow('Unexpected Error');
     })
   });
 });
